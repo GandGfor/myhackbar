@@ -1,2 +1,3 @@
-# myhackbar
-自制hackbar插件
+# my-hackbar
+自制hackbar插件:
+  与传统hackbar插件不同的是，该插件可以全量输入请求头和请求体，方便对于其他参数的调试。并且该插件可以实时同步页面回显。
