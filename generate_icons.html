@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>生成 MyHackBar 图标</title>
+<style>
+body { font-family: sans-serif; padding: 40px; background: #f5f5f5; text-align: center; }
+button { padding: 12px 24px; margin: 10px; font-size: 16px; cursor: pointer; border: none; background: #0e639c; color: #fff; border-radius: 6px; }
+button:hover { background: #1177bb; }
+.preview { display: flex; gap: 20px; justify-content: center; margin-top: 30px; }
+.preview canvas { border: 1px solid #ccc; border-radius: 8px; }
+</style>
+</head>
+<body>
+<h1>MyHackBar 图标生成器</h1>
+<p>点击按钮下载图标，放到 <code>icons/</code> 目录下</p>
+<div>
+  <button onclick="download(16)">下载 icon16.png</button>
+  <button onclick="download(48)">下载 icon48.png</button>
+  <button onclick="download(128)">下载 icon128.png</button>
+  <button onclick="download(16);download(48);download(128);">全部下载</button>
+</div>
+<div class="preview" id="preview"></div>
+
+<script>
+function drawIcon(size) {
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const r = size * 0.18;
+
+  // 圆角矩形背景
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(size - r, 0);
+  ctx.quadraticCurveTo(size, 0, size, r);
+  ctx.lineTo(size, size - r);
+  ctx.quadraticCurveTo(size, size, size - r, size);
+  ctx.lineTo(r, size);
+  ctx.quadraticCurveTo(0, size, 0, size - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+
+  // 渐变背景
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, '#0e639c');
+  grad.addColorStop(1, '#1a3a5c');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // 内边框
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = size * 0.04;
+  ctx.stroke();
+
+  // 文字 "HB"
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `bold ${size * 0.42}px Consolas, "Courier New", monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0,0,0,0.3)';
+  ctx.shadowBlur = size * 0.05;
+  ctx.shadowOffsetY = size * 0.02;
+  ctx.fillText('HB', size / 2, size / 2);
+
+  // 底部小横线装饰
+  ctx.shadowColor = 'transparent';
+  ctx.fillStyle = '#4ec9b0';
+  const barW = size * 0.4;
+  const barH = size * 0.06;
+  ctx.fillRect((size - barW) / 2, size * 0.78, barW, barH);
+
+  return canvas;
+}
+
+function download(size) {
+  const canvas = drawIcon(size);
+  const link = document.createElement('a');
+  link.download = `icon${size}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// 预览
+[16, 48, 128].forEach(size => {
+  const canvas = drawIcon(size);
+  canvas.style.width = Math.max(size, 48) + 'px';
+  canvas.style.height = Math.max(size, 48) + 'px';
+  document.getElementById('preview').appendChild(canvas);
+});
+</script>
+</body>
+</html>

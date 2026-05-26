@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "MyHackBar",
+  "version": "3.0",
+  "description": "自定义HackBar - 修改请求体/Header/Method，页面同步响应",
+  "permissions": ["activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "devtools_page": "devtools.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>MyHackBar</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Consolas, monospace;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 10px;
+  font-size: 13px;
+}
+.section { margin-bottom: 10px; }
+label {
+  display: block;
+  margin-bottom: 4px;
+  color: #569cd6;
+  font-weight: bold;
+}
+input[type="text"], textarea, select {
+  width: 100%;
+  background: #2d2d2d;
+  border: 1px solid #444;
+  color: #d4d4d4;
+  padding: 6px 8px;
+  border-radius: 3px;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+}
+textarea { resize: vertical; min-height: 80px; }
+.row { display: flex; gap: 10px; align-items: center; }
+.row select { width: 100px; flex-shrink: 0; }
+.row input { flex: 1; }
+.btn-group { margin: 10px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+button {
+  background: #0e639c;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+button:hover { background: #1177bb; }
+button.danger { background: #c53030; }
+button.danger:hover { background: #e53e3e; }
+button.tool { background: #4a5568; }
+button.tool:hover { background: #636e7e; }
+.response-section {
+  margin-top: 10px;
+  border-top: 1px solid #444;
+  padding-top: 10px;
+}
+#responseStatus { margin-bottom: 4px; font-weight: bold; }
+#syncStatus { margin-bottom: 6px; font-size: 11px; color: #888; }
+#syncStatus.ok { color: #4ec9b0; }
+#syncStatus.err { color: #f44747; }
+#responseHeaders {
+  width: 100%;
+  min-height: 50px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: #9cdcfe;
+  padding: 8px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 120px;
+  margin-bottom: 8px;
+}
+#responseBody {
+  width: 100%;
+  min-height: 200px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: #ce9178;
+  padding: 8px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 400px;
+}
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.checkbox-row input[type="checkbox"] { width: auto; }
+.status-ok { color: #4ec9b0; }
+.status-err { color: #f44747; }
+.option-bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: #252526;
+  border-radius: 3px;
+  border: 1px solid #333;
+}
+.note {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  background: #252526;
+  border-radius: 3px;
+}
+</style>
+</head>
+<body>
+
+<div class="note">⚠️ 请在普通网页(http/https)上使用，edge:// 页面无法同步</div>
+
+<div class="option-bar">
+  <div class="checkbox-row">
+    <input type="checkbox" id="syncPage" checked>
+    <label for="syncPage" style="display:inline;margin:0;color:#4ec9b0;">同步到浏览器页面</label>
+  </div>
+  <div class="checkbox-row">
+    <input type="checkbox" id="enableHeaders" checked>
+    <label for="enableHeaders" style="display:inline;margin:0;">Headers</label>
+  </div>
+  <div class="checkbox-row">
+    <input type="checkbox" id="enableBody" checked>
+    <label for="enableBody" style="display:inline;margin:0;">Body</label>
+  </div>
+</div>
+
+<div class="section">
+  <div class="row">
+    <select id="method">
+      <option value="GET">GET</option>
+      <option value="POST" selected>POST</option>
+      <option value="PUT">PUT</option>
+      <option value="DELETE">DELETE</option>
+      <option value="PATCH">PATCH</option>
+    </select>
+    <input type="text" id="url" placeholder="输入目标URL">
+    <button id="btnSend">🚀 发送</button>
+    <button id="btnLoadUrl" class="tool">📍 当前页</button>
+  </div>
+</div>
+
+<div class="section">
+  <textarea id="headers" rows="4" placeholder="每行一个 Header，格式: Key: Value&#10;Content-Type: application/json&#10;Authorization: Bearer token"></textarea>
+</div>
+
+<div class="section">
+  <textarea id="body" rows="5" placeholder="请求体内容&#10;JSON: {&quot;key&quot;:&quot;value&quot;}&#10;Form: key1=value1&amp;key2=value2"></textarea>
+</div>
+
+<div class="btn-group">
+  <button class="tool" id="btnBase64Enc">Base64编码</button>
+  <button class="tool" id="btnBase64Dec">Base64解码</button>
+  <button class="tool" id="btnUrlEnc">URL编码</button>
+  <button class="tool" id="btnUrlDec">URL解码</button>
+  <button class="danger" id="btnClear">清空</button>
+</div>
+
+<div class="response-section">
+  <div id="responseStatus"></div>
+  <div id="syncStatus"></div>
+  <label>Response Headers</label>
+  <div id="responseHeaders"></div>
+  <label>Response Body</label>
+  <div id="responseBody"></div>
+</div>
+
+<script src="panel.js"></script>
+</body>
+</html>
